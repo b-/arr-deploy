@@ -12,7 +12,7 @@ poll_for_updates = true
 auto_update = true
 git_account = "b-"
 repo = "b-/radarr-deploy"
-branch = "all"
+branch = "main"
 reclone = true
 file_paths = [
   "compose.yaml",
@@ -27,8 +27,8 @@ name = "arr"
 tags = ["radarr", "arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"
-branch = "all"
+branch = "main"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
-match_tags = ["radarr"]
+match_tags = ["radarr", "sync"]
