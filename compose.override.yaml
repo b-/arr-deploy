@@ -20,7 +20,7 @@ services:
       - TZ=America/New_York
     volumes:
       - type: bind
-        source: /tmp/xxx-config
+        source: /var/srv/apps/sonarr/data
         target: /config
         bind:
           create_host_path: true
