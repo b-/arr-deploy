@@ -1,1 +1,1 @@
-# mediaboxlite-sonarr
+# mediaboxlite-radarr

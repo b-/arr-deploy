@@ -1,15 +1,15 @@
 [[stack]]
-name = "sonarr"
-tags = ["media", "sonarr", "arr"]
+name = "radarr"
+tags = ["media", "radarr", "arr"]
 [stack.config]
 server = "localhost"
 links = [
-  "https://sonarr.mediaboxlite.ibeep.com"
+  "https://radarr.mediaboxlite.ibeep.com"
 ]
 poll_for_updates = true
 auto_update = true
 git_account = "b-"
-repo = "b-/mediaboxlite-sonarr"
+repo = "b-/mediaboxlite-radarr"
 reclone = true
 file_paths = [
   "compose.yaml",
@@ -20,11 +20,11 @@ env_file_path = "compose.env"
 ##
 
 [[resource_sync]]
-name = "sonarr"
-tags = ["sonarr", "arr", "sync"]
+name = "radarr"
+tags = ["radarr", "arr", "sync"]
 [resource_sync.config]
-repo = "b-/mediaboxlite-sonarr"
+repo = "b-/radarr-deploy"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
-match_tags = ["sonarr"]
+match_tags = ["radarr"]
