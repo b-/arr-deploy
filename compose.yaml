@@ -21,6 +21,26 @@ services:
       - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
 
+# jellyfin
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - JELLYFIN_PublishedServerUrl=http://192.168.0.5 #optional
+    volumes:
+      - /path/to/jellyfin/library:/config
+      - /path/to/tvseries:/data/tvshows
+      - /path/to/movies:/data/movies
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    restart: unless-stopped
+
 # plex
   plex:
     image: lscr.io/linuxserver/plex:latest
@@ -110,6 +130,15 @@ configs:
                   "redirections": [
                       ["32400", "TCP"],
                       ["32400", "UDP"]
+                  ]
+              },
+              {
+                  "app_name": "jellyfin",
+                  "redirections": [
+                      ["8096", "TCP"],
+                      ["8920", "TCP"],
+                      ["7359", "UDP"],
+                      ["1900", "UDP"]
                   ]
               }
         ]

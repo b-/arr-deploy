@@ -24,6 +24,50 @@ services:
       - traefik.http.routers.filebrowser.entrypoints=web
       - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
+
+# jellyfin
+  jellyfin:
+    networks:
+      - default
+      - traefik
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.${TRAEFIK_FQDN}
+    volumes:
+      # - type: bind
+      #   source: /var/srv/media
+      #   target: /media
+      #   bind:
+      #     create_host_path: false
+      - type: bind
+        source: /var/srv/media/content/tv
+        target: /data/tvshows
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/media/content/movies
+        target: /data/movies
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/apps/jellyfin/data
+        target: /config
+        bind:
+          create_host_path: true
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=HostRegexp(`^jellyfin${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+
 # plex
   plex:
     environment:
