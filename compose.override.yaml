@@ -113,8 +113,8 @@ services:
         bind:
           create_host_path: true
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.plex.rule=HostRegexp(`^plex\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.rule=HostRegexp(`^plex\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
       - traefik.http.services.plex.loadbalancer.server.port=32400
       - traefik.http.services.plex.loadBalancer.server.url=http://192.168.1.80:32400/"
 
@@ -135,7 +135,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.filebrowser.entrypoints=web
-      - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
+      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
   qbittorrent:
       image: lscr.io/linuxserver/qbittorrent:latest
