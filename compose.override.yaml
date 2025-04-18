@@ -20,7 +20,7 @@ services:
       - TZ=America/New_York
     volumes:
       - type: bind
-        source: ./config
+        source: /tmp/xxx-config
         target: /config
         bind:
           create_host_path: true
@@ -36,5 +36,6 @@ services:
           create_host_path: false
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.${APP_NAME}.rule=HostRegexp(`^${APP_NAME}\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
       - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=8989"
