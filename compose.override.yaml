@@ -88,12 +88,12 @@ services:
         bind:
           create_host_path: true
       - type: bind
-        source: /var/srv/media/tv
+        source: /var/srv/media/content/tv
         target: /tv
         bind:
           create_host_path: false
       - type: bind
-        source: /var/srv/media/movies
+        source: /var/srv/media/content/movies
         target: /movies
         bind:
           create_host_path: false
