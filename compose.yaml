@@ -1,60 +1,6 @@
 ---
 services:
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - /path/to/radarr/data:/config
-      - /path/to/movies:/movies #optional
-      - /path/to/download-client-downloads:/downloads #optional
-    ports:
-      - 7878:7878
-    restart: unless-stopped
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - /path/to/prowlarr/data:/config
-    ports:
-      - 9696:9696
-    restart: unless-stopped
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - /path/to/sonarr/data:/config
-      - /path/to/tvseries:/tv #optional
-      - /path/to/downloadclient-downloads:/downloads #optional
-    ports:
-      - 8989:8989
-    restart: unless-stopped
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    network_mode: host
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
-      - VERSION=latest
-      - PLEX_CLAIM=claim-SVpPkwxUCMrdqrr-zSM2 #optional
-    volumes:
-      - /var/srv/plex/library:/config
-      - /var/srv/media/plex/tv:/tv
-      - /var/srv/media/plex/movies:/movies
-    restart: unless-stopped
+# filebrowser
   filebrowser:
     restart: unless-stopped
     networks:
@@ -74,6 +20,69 @@ services:
       - traefik.http.routers.filebrowser.entrypoints=web
       - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
+
+# plex
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=latest
+    restart: unless-stopped
+  plex-upnp-service:
+    image: ghcr.io/projectinitiative/upnp-service:latest
+    network_mode: "host"
+    #container_name: upnp-service
+    restart: unless-stopped
+    configs:
+      - source: upnp
+        target: /etc/upnp-service/upnp.json
+
+# Arr stack
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/radarr/data:/config
+      - /path/to/movies:/movies #optional
+      - /path/to/download-client-downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/sonarr/data:/config
+      - /path/to/tvseries:/tv #optional
+      - /path/to/downloadclient-downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+# qbittorrent
   qbittorrent:
       image: lscr.io/linuxserver/qbittorrent:latest
       container_name: qbittorrent
@@ -87,20 +96,7 @@ services:
         - /var/srv/apps/qbittorrent/appdata:/config
         - /var/srv/media/downloads:/downloads #optional
       network_mode: host
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.qbittorrent.entrypoints=web
-        - traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\..*$`)
-        - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
       restart: unless-stopped
-  plex-upnp-service:
-    image: ghcr.io/projectinitiative/upnp-service:latest
-    network_mode: "host"
-    #container_name: upnp-service
-    restart: unless-stopped
-    configs:
-      - source: upnp
-        target: /etc/upnp-service/upnp.json
 
 configs:
   upnp:

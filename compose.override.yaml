@@ -5,6 +5,76 @@ networks:
   traefik:
     external: true
 services:
+# filebrowser
+  filebrowser:
+    networks:
+      - traefik
+    volumes:
+      - /var/srv:/srv
+      - /var/srv/filebrowser/filebrowser.db:/database/filebrowser.db
+      - /var/srv/filebrowser/settings.json:/config/settings.json
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 127.0.0.1:8080:80
+    image: filebrowser/filebrowser:s6
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser.entrypoints=web
+      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
+# plex
+  plex:
+    environment:
+      - TZ=${TZ}
+      - VERSION=latest
+    volumes:
+      - type: bind
+        source: /var/srv/media
+        target: /media
+        bind:
+          create_host_path: false
+      # - type: bind
+      #   source: /var/srv/media/content/tv
+      #   target: /tv
+      #   bind:
+      #     create_host_path: false
+      # - type: bind
+      #   source: /var/srv/media/content/movies
+      #   target: /movies
+      #   bind:
+      #     create_host_path: false
+      - type: bind
+        source: /var/srv/apps/plex/data
+        target: /config
+        bind:
+          create_host_path: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.rule=HostRegexp(`^plex${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.plex.loadbalancer.server.port=32400
+
+    restart: unless-stopped
+
+# Arr stack
+  prowlarr:
+    networks:
+      - default
+      - traefik
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - type: bind
+        source: /var/srv/apps/prowlarr/data
+        target: /config
+        bind:
+          create_host_path: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   radarr:
     networks:
       - default
@@ -37,23 +107,6 @@ services:
       - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
       - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-  prowlarr:
-    networks:
-      - default
-      - traefik
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - type: bind
-        source: /var/srv/apps/prowlarr/data
-        target: /config
-        bind:
-          create_host_path: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   sonarr:
     networks:
       - default
@@ -71,84 +124,33 @@ services:
         target: /config
         bind:
           create_host_path: true
-    #   - type: bind
-    #     source: /var/srv/media/content/tv
-    #     target: /tv
-    #     bind:
-    #       create_host_path: false
-    #   - type: bind
-    #     source: /var/srv/media/downloads
-    #     target: /downloads
-    #     bind:
-    #       create_host_path: false
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-  plex:
-    environment:
-      - TZ=${TZ}
-      - PLEX_CLAIM=claim-SVpPkwxUCMrdqrr-zSM2
-      - VERSION=latest
-    volumes: !override
-      - type: bind
-        source: /var/srv/media
-        target: /media
-        bind:
-          create_host_path: false
-      # - type: bind
-      #   source: /var/srv/media/content/tv
-      #   target: /tv
-      #   bind:
-      #     create_host_path: false
-      # - type: bind
-      #   source: /var/srv/media/content/movies
-      #   target: /movies
-      #   bind:
-      #     create_host_path: false
-      - type: bind
-        source: /var/srv/apps/plex/data
-        target: /config
-        bind:
-          create_host_path: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.plex.rule=HostRegexp(`^plex${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.plex.loadbalancer.server.port=32400
-      # - traefik.http.services.plex.loadBalancer.server.url=http://192.168.1.80:32400/"
 
-    restart: unless-stopped
-  filebrowser:
-    networks:
-      - traefik
-    volumes:
-      - /var/srv:/srv
-      - /var/srv/filebrowser/filebrowser.db:/database/filebrowser.db
-      - /var/srv/filebrowser/settings.json:/config/settings.json
-    environment:
-      - PUID=1000
-      - PGID=1000
-    ports:
-      - 127.0.0.1:8080:80
-    image: filebrowser/filebrowser:s6
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.filebrowser.entrypoints=web
-      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.filebrowser.loadbalancer.server.port=80
   qbittorrent:
-      image: lscr.io/linuxserver/qbittorrent:latest
-      container_name: qbittorrent
       environment:
-        - PUID=1000
-        - PGID=1000
         - TZ=America/New_York
         - WEBUI_PORT=8112
         - TORRENTING_PORT=51412
-      volumes:
-        - /var/srv/apps/qbittorrent/appdata:/config
-        - /var/srv/media:/media #optional
+      volumes: !override
+        - type: bind
+          source: /var/srv/apps/qbittorrent/appdata
+          target: /config
+          bind:
+            create_host_path: true
+        - type: bind
+          source: /var/srv/media/downloads
+          target: /downloads
+          bind:
+            create_host_path: true
+        - type: bind
+          source: /var/srv/media
+          target: /media
+          bind:
+            create_host_path: true
       network_mode: host
       labels:
         - traefik.enable=true
