@@ -16,3 +16,15 @@ file_paths = [
   "compose.override.yaml"
 ]
 env_file_path = "compose.env"
+
+##
+
+[[resource_sync]]
+name = "sonarr"
+tags = ["sonarr", "arr", "sync"]
+[resource_sync.config]
+repo = "b-/mediaboxlite-sonarr"
+git_account = "b-"
+resource_path = ["stack.toml"]
+managed = true
+match_tags = ["sonarr"]
