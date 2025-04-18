@@ -93,3 +93,28 @@ services:
         - traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\..*$`)
         - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
       restart: unless-stopped
+  plex-upnp-service:
+    image: ghcr.io/projectinitiative/upnp-service:latest
+    network_mode: "host"
+    #container_name: upnp-service
+    restart: unless-stopped
+    configs:
+      - source: upnp
+        target: /etc/upnp-service/upnp.json
+
+configs:
+  upnp:
+    # /etc/upnp-service/upnp.json
+    content: |
+      {
+          "apps":
+          [
+              {
+                  "app_name": "plex",
+                  "redirections": [
+                      ["32400", "TCP"],
+                      ["32400", "UDP"]
+                  ]
+              }
+        ]
+      }
