@@ -27,6 +27,7 @@ name = "arr"
 tags = ["radarr", "arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"
+branch = "all"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
