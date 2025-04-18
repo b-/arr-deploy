@@ -64,6 +64,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.jellyfin.rule=HostRegexp(`^jellyfin${TRAEFIK_RULE_SUFFIX}"
       - traefik.http.services.jellyfin.loadbalancer.server.port=8096
 
@@ -176,6 +177,9 @@ services:
 
 # tautulli
   tautulli:
+    networks:
+      - default
+      - traefik
     environment:
       - TZ=America/New_York
     volumes: !override
