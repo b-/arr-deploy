@@ -12,6 +12,7 @@ poll_for_updates = true
 auto_update = true
 git_account = "b-"
 repo = "b-/radarr-deploy"
+branch = "all"
 reclone = true
 file_paths = [
   "compose.yaml",
