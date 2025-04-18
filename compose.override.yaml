@@ -35,7 +35,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
-      - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
   prowlarr:
     networks:
@@ -52,7 +52,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   sonarr:
     networks:
@@ -84,7 +84,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
   plex:
     environment:
@@ -114,7 +114,7 @@ services:
           create_host_path: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.plex.rule=HostRegexp(`^plex\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.routers.plex.rule=HostRegexp(`^plex${TRAEFIK_RULE_SUFFIX}"
       - traefik.http.services.plex.loadbalancer.server.port=32400
       # - traefik.http.services.plex.loadBalancer.server.url=http://192.168.1.80:32400/"
 
@@ -135,7 +135,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.filebrowser.entrypoints=web
-      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
   qbittorrent:
       image: lscr.io/linuxserver/qbittorrent:latest
@@ -152,6 +152,6 @@ services:
       network_mode: host
       labels:
         - traefik.enable=true
-        - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+        - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
         - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
       restart: unless-stopped
