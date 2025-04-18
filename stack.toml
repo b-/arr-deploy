@@ -1,10 +1,12 @@
 [[stack]]
-name = "radarr"
+name = "arr"
 tags = ["media", "radarr", "arr"]
 [stack.config]
 server = "localhost"
 links = [
-  "https://radarr.mediaboxlite.ibeep.com"
+  "https://radarr.mediaboxlite.ibeep.com",
+  "https://prowlarr.mediaboxlite.ibeep.com",
+  "https://sonarr.mediaboxlite.ibeep.com"
 ]
 poll_for_updates = true
 auto_update = true
@@ -20,7 +22,7 @@ env_file_path = "compose.env"
 ##
 
 [[resource_sync]]
-name = "radarr"
+name = "arr"
 tags = ["radarr", "arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"

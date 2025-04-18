@@ -14,3 +14,81 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/sonarr/data:/config
+      - /path/to/tvseries:/tv #optional
+      - /path/to/downloadclient-downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - VERSION=latest
+      - PLEX_CLAIM=claim-SVpPkwxUCMrdqrr-zSM2 #optional
+    volumes:
+      - /var/srv/plex/library:/config
+      - /var/srv/media/plex/tv:/tv
+      - /var/srv/media/plex/movies:/movies
+    restart: unless-stopped
+  filebrowser:
+    networks:
+      - traefik
+    volumes:
+      - /var/srv:/srv
+      - /var/srv/filebrowser/filebrowser.db:/database/filebrowser.db
+      - /var/srv/filebrowser/settings.json:/config/settings.json
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 127.0.0.1:8080:80
+    image: filebrowser/filebrowser:s6
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser.entrypoints=web
+      - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
+  qbittorrent:
+      image: lscr.io/linuxserver/qbittorrent:latest
+      container_name: qbittorrent
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - WEBUI_PORT=8112
+        - TORRENTING_PORT=51412
+      volumes:
+        - /var/srv/apps/qbittorrent/appdata:/config
+        - /var/srv/media/downloads:/downloads #optional
+      network_mode: host
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.qbittorrent.entrypoints=web
+        - traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\..*$`)
+        - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
+      restart: unless-stopped

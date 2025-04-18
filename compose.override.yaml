@@ -1,31 +1,24 @@
 ---
-x-base:
-  name: &name radarr
 networks:
   default:
-    name: *name
+    name: arr
   traefik:
     external: true
 services:
   radarr:
-    env_file:
-#      - path: ./default.env
-#        required: true
-      - path: ./override.env
-        required: false
     networks:
       - default
       - traefik
     environment:
-      - TZ=America/New_York
+      - TZ=${TZ}
     volumes:
       - type: bind
-        source: /var/srv/apps/${APP_NAME}/data
+        source: /var/srv/apps/radarr/data
         target: /config
         bind:
           create_host_path: true
       - type: bind
-        source: /var/srv/media/plex/movies
+        source: /var/srv/media/content/movies
         target: /movies
         bind:
           create_host_path: false
@@ -36,6 +29,113 @@ services:
           create_host_path: false
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
+      - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+  prowlarr:
+    networks:
+      - default
+      - traefik
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - type: bind
+        source: /var/srv/apps/prowlarr/data
+        target: /config
+        bind:
+          create_host_path: true
+    labels:
+      - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.${APP_NAME}.rule=HostRegexp(`^${APP_NAME}\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
-      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=7878"
+      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+  sonarr:
+    networks:
+      - default
+      - traefik
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - type: bind
+        source: /var/srv/apps/sonarr/data
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /var/srv/media/content/tv
+        target: /tv
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/media/downloads
+        target: /downloads
+        bind:
+          create_host_path: false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+  plex:
+    environment:
+      - TZ=${TZ}
+      - PLEX_CLAIM=claim-SVpPkwxUCMrdqrr-zSM2
+      - VERSION=latest
+    volumes:
+      - type: bind
+        source: /var/srv/apps/plex/data
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /var/srv/media/tv
+        target: /tv
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/media/movies
+        target: /movies
+        bind:
+          create_host_path: false
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.plex.rule=HostRegexp(`^plex\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
+      - traefik.http.services.plex.loadbalancer.server.port=32400
+    restart: unless-stopped
+  filebrowser:
+    networks:
+      - traefik
+    volumes:
+      - /var/srv:/srv
+      - /var/srv/filebrowser/filebrowser.db:/database/filebrowser.db
+      - /var/srv/filebrowser/settings.json:/config/settings.json
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 127.0.0.1:8080:80
+    image: filebrowser/filebrowser:s6
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser.entrypoints=web
+      - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
+  qbittorrent:
+      image: lscr.io/linuxserver/qbittorrent:latest
+      container_name: qbittorrent
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/New_York
+        - WEBUI_PORT=8112
+        - TORRENTING_PORT=51412
+      volumes:
+        - /var/srv/apps/qbittorrent/appdata:/config
+        - /var/srv/media/downloads:/downloads #optional
+      network_mode: host
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.qbittorrent.entrypoints=web
+        - traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\..*$`)
+        - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
+      restart: unless-stopped
