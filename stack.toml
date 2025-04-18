@@ -1,6 +1,6 @@
 [[stack]]
 name = "arr"
-tags = ["media", "radarr", "arr"]
+tags = ["media", "arr"]
 [stack.config]
 server = "localhost"
 links = [
@@ -31,7 +31,7 @@ env_file_path = "compose.env"
 
 [[resource_sync]]
 name = "arr"
-tags = ["radarr", "arr", "sync"]
+tags = ["arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"
 branch = "main"
