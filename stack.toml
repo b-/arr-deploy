@@ -1,1 +1,18 @@
-## Add resources to get started
+[[stack]]
+name = "sonarr"
+tags = ["media", "sonarr", "arr"]
+[stack.config]
+server = "localhost"
+links = [
+  "https://sonarr.mediaboxlite.ibeep.com"
+]
+poll_for_updates = true
+auto_update = true
+git_account = "b-"
+repo = "b-/mediaboxlite-sonarr"
+reclone = true
+file_paths = [
+  "compose.yaml",
+  "compose.override.yaml"
+]
+env_file_path = "compose.env"
