@@ -1,0 +1,40 @@
+---
+x-base:
+  name: &name sonarr
+networks:
+  default:
+    name: *name
+  traefik:
+    external: true
+services:
+  sonarr:
+    env_file:
+#      - path: ./default.env
+#        required: true
+      - path: ./override.env
+        required: false
+    networks:
+      - default
+      - traefik
+    environment:
+      - TZ=America/New_York
+    volumes:
+      - type: bind
+        source: ./config
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /var/srv/media/plex/tv
+        target: /tv
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/media/downloads
+        target: /downloads
+        bind:
+          create_host_path: false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_NAME}.rule=HostRegexp(`^${APP_NAME}\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=8989"
