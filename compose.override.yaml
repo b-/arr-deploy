@@ -153,6 +153,6 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.qbittorrent.entrypoints=web
-        - traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\..*$`)
+      - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
         - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
       restart: unless-stopped
