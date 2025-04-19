@@ -8,9 +8,6 @@ links = [
   "https://plex.mediaboxlite.ibeep.com",
   "https://jellyfin.mediaboxlite.ibeep.com",
   "https://tautulli.mediaboxlite.ibeep.com",
-  # "https://bazarr.mediaboxlite.ibeep.com",
-  # "https://lidarr.mediaboxlite.ibeep.com",
-  # "https://readarr.mediaboxlite.ibeep.com",
   "https://radarr.mediaboxlite.ibeep.com",
   "https://prowlarr.mediaboxlite.ibeep.com",
   "https://sonarr.mediaboxlite.ibeep.com"
@@ -19,7 +16,6 @@ poll_for_updates = true
 auto_update = true
 git_account = "b-"
 repo = "b-/radarr-deploy"
-branch = "main"
 reclone = true
 file_paths = [
   "compose.yaml",
@@ -34,8 +30,7 @@ name = "arr"
 tags = ["arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"
-branch = "main"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
-match_tags = ["radarr"]
+match_tags = ["arr"]
