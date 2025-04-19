@@ -17,7 +17,6 @@ services:
     image: filebrowser/filebrowser:s6
     labels:
       - traefik.enable=true
-      - traefik.http.routers.filebrowser.entrypoints=web
       - traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)
       - traefik.http.services.filebrowser.loadbalancer.server.port=80
 
