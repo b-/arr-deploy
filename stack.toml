@@ -15,13 +15,19 @@ links = [
 poll_for_updates = true
 auto_update = true
 git_account = "b-"
-repo = "b-/radarr-deploy"
+repo = "b-/arr-deploy"
 reclone = true
 file_paths = [
   "compose.yaml",
   "compose.override.yaml"
 ]
 env_file_path = "compose.env"
+pre_deploy.command = """
+  # Add multiple commands on new lines. Supports comments.
+  docker pull docker.io/1password/op:2
+  docker run -e OP_SERVICE_ACCOUNT_TOKEN=[[OP_SERVICE_ACCOUNT_TOKEN]] --rm -v .:/work:z docker.io/1password/op:2 op inject -i /work/compose.env > compose.env.tmp
+  mv compose.env.tmp compose.env
+"""
 
 ##
 
