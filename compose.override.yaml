@@ -205,6 +205,7 @@ services:
         - TZ=America/New_York
         - WEBUI_PORT=8112
         - TORRENTING_PORT=51412
+        - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
       volumes: !override
         - type: bind
           source: /var/srv/apps/qbittorrent/appdata
