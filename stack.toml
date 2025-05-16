@@ -1,8 +1,8 @@
 [[stack]]
-name = "arr"
-tags = ["media", "arr"]
+name = "mediaboxlite-arr"
+tags = ["mediaboxlite", "mediaboxlite-arr", "arr"]
 [stack.config]
-server = "localhost"
+server = "mediaboxlite"
 links = [
   "https://filebrowser.mediaboxlite.ibeep.com",
   "https://plex.mediaboxlite.ibeep.com",
@@ -10,7 +10,8 @@ links = [
   "https://tautulli.mediaboxlite.ibeep.com",
   "https://radarr.mediaboxlite.ibeep.com",
   "https://prowlarr.mediaboxlite.ibeep.com",
-  "https://sonarr.mediaboxlite.ibeep.com"
+  "https://sonarr.mediaboxlite.ibeep.com",
+  "https://qbittorrent.mediaboxlite.ibeep.com"
 ]
 poll_for_updates = true
 auto_update = true
@@ -32,11 +33,11 @@ pre_deploy.command = """
 ##
 
 [[resource_sync]]
-name = "arr"
-tags = ["arr", "sync"]
+name = "mediaboxlite-arr"
+tags = ["mediaboxlite", "mediaboxlite-arr", "arr", "sync"]
 [resource_sync.config]
 repo = "b-/radarr-deploy"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
-match_tags = ["arr"]
+match_tags = ["mediaboxlite-arr"]
