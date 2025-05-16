@@ -36,7 +36,7 @@ pre_deploy.command = """
 name = "mediaboxlite-arr"
 tags = ["mediaboxlite", "mediaboxlite-arr", "arr", "sync"]
 [resource_sync.config]
-repo = "b-/radarr-deploy"
+repo = "b-/arr-deploy"
 git_account = "b-"
 resource_path = ["stack.toml"]
 managed = true
