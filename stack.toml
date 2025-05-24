@@ -1,6 +1,10 @@
 [[stack]]
 name = "mediaboxlite-arr"
-tags = ["mediaboxlite", "mediaboxlite-arr", "arr"]
+tags = [
+  "mediaboxlite",
+  "mediaboxlite-arr",
+  "arr"
+]
 [stack.config]
 server = "mediaboxlite"
 links = [
@@ -23,18 +27,25 @@ file_paths = [
   "compose.override.yaml"
 ]
 env_file_path = "compose.env"
-pre_deploy.command = """
-  # Add multiple commands on new lines. Supports comments.
-  docker pull docker.io/1password/op:2
-  docker run -e OP_SERVICE_ACCOUNT_TOKEN=[[OP_SERVICE_ACCOUNT_TOKEN]] --rm -v .:/work:z docker.io/1password/op:2 op inject -i /work/compose.env > compose.env.tmp
-  mv compose.env.tmp compose.env
+environment = """
+TRAEFIK_HOSTNAME=mediaboxlite
+TRAEFIK_FQDN=mediaboxlite.ibeep.com
+TRAEFIK_DOCKER_NETWORK=traefik
+TRAEFIK_RULE_SUFFIX="\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
+TZ=America/New_York
+SONARR_API_KEY=[[OP__KOMODO__SONARR_API_KEY__CREDENTIAL]]
 """
 
 ##
 
 [[resource_sync]]
 name = "mediaboxlite-arr"
-tags = ["mediaboxlite", "mediaboxlite-arr", "arr", "sync"]
+tags = [
+  "mediaboxlite",
+  "mediaboxlite-arr",
+  "arr",
+  "sync"
+]
 [resource_sync.config]
 repo = "b-/arr-deploy"
 git_account = "b-"
