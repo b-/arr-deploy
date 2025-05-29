@@ -315,10 +315,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "sonarr-arr"
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
-        - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
   qbittorrent:
       network_mode: service:qbittorrent-ts
       environment:
