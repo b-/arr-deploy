@@ -98,9 +98,9 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "jellyfin-arr"
-      TS_LOCAL_ADDR_PORT: 127.0.0.1:41235
+      TS_LOCAL_ADDR_PORT: 127.0.0.1:41236
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:41235/healthz"] # Check Tailscale has a Tailnet IP and is operational
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:41236/healthz"] # Check Tailscale has a Tailnet IP and is operational
     extra_hosts:
       - host.docker.internal=host-gateway
     labels:
