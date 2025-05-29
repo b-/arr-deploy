@@ -71,6 +71,7 @@ services:
 #      - 80:80
 # filebrowser
   filebrowser:
+    ports: !reset [null]
     network_mode: service:filebrowser-ts
     #networks:
     #  - traefik
@@ -111,6 +112,7 @@ services:
       - 1900:1900/udp #optional
   jellyfin:
     network_mode: service:jellyfin-ts
+    ports: !reset [null]
     #networks:
     #  - default
     #  - traefik
@@ -158,6 +160,7 @@ services:
       - traefik.http.services.plex.loadbalancer.server.port=32400
   plex:
     network_mode: service:plex-ts
+    ports: !reset [null]
     environment:
       - TZ=${TZ}
       - VERSION=latest
@@ -199,6 +202,7 @@ services:
       - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   prowlarr:
+    ports: !reset [null]
     network_mode: service:prowlarr-ts
     #networks:
     #  - default
@@ -224,6 +228,7 @@ services:
       - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
   radarr:
+    ports: !reset [null]
     #networks:
     #  - default
     #  - traefik
@@ -261,6 +266,7 @@ services:
       - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
   sonarr:
+    ports: !reset [null]
     extra_hosts:
       - host.docker.internal=host-gateway
     network_mode: service:sonarr-ts
@@ -298,6 +304,7 @@ services:
       - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
   tautulli:
     network_mode: service:tautulli-ts
+    ports: !reset [null]
    # networks:
    #   - default
    #   - traefik
@@ -320,6 +327,7 @@ services:
       - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
   qbittorrent:
+      ports: !reset [null]
       network_mode: service:qbittorrent-ts
       environment:
         - TZ=America/New_York
