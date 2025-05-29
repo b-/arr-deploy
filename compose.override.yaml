@@ -198,7 +198,7 @@ services:
       - host.docker.internal=host-gateway
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
+      #- "traefik.docker.network=traefik"
       - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   prowlarr:
@@ -262,7 +262,7 @@ services:
       TS_HOSTNAME: "sonarr-arr"
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
+      #- "traefik.docker.network=traefik"
       - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
     extra_hosts:
@@ -299,7 +299,7 @@ services:
       - host.docker.internal=host-gateway
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
+      #- "traefik.docker.network=traefik"
       - "traefik.http.routers.tautulli.rule=HostRegexp(`^tautulli${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
   tautulli:
