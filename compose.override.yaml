@@ -234,6 +234,7 @@ services:
       - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
   radarr:
+    network_mode: service:radarr-ts
     ports: !reset [null]
     #networks:
     #  - default
