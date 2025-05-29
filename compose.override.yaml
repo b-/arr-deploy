@@ -265,10 +265,10 @@ services:
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-  sonarr:
-    ports: !reset [null]
     extra_hosts:
       - host.docker.internal=host-gateway
+  sonarr:
+    ports: !reset [null]
     network_mode: service:sonarr-ts
     #networks:
     #  - default
