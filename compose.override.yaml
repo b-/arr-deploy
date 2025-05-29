@@ -66,7 +66,7 @@ services:
     labels:
       - traefik.enable=true
       - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.filebrowser.loadbalancer.server.port=8123
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
       - "kop.filebrowser.bind.ip=filebrowser-arr.shark-perch.ts.net"
 #    ports:
 #      - 80:80
