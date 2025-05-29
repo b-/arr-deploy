@@ -1,14 +1,79 @@
 ---
+configs:
+  whoami_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:80"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": true
+          }
+      }
+
+x-ts-sidecar: &ts-sidecar
+  # volumes:
+  #   - ts_state:/ts_state
+  image: tailscale/tailscale:latest
+  environment: &ts-env
+    TS_AUTHKEY: ${TS_AUTHKEY}
+    TS_EXTRA_ARGS: "--advertise-tags=tag:docker"
+    #TS_USERSPACE: false
+    TS_ENABLE_HEALTH_CHECK: true
+    TS_LOCAL_ADDR_PORT: 127.0.0.1:41234
+    TS_STATE: "mem:"
+    #TS_SERVE_CONFIG: /config/serve.json
+    #TS_AUTHKEY: tskey-auth-kS5WUC4XYe11CNTRL-AT7DucG3DnhrX8j6rmPdhhcuN2mRerBk
+    #TS_HOSTNAME: generic-sidecar
+  #    ports:
+  #      - "8120"
+  #    devices:
+  #      - /dev/net/tun:/dev/net/tun # Network configuration for Tailscale to work
+  #    cap_add:
+  #      - net_admin # Tailscale requirement
+  #      - sys_module # Tailscale requirement
+  healthcheck:
+    test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz"] # Check Tailscale has a Tailnet IP and is operational
+    interval: 1m # How often to perform the check
+    timeout: 10s # Time to wait for the check to succeed
+    retries: 3 # Number of retries before marking as unhealthy
+    start_period: 10s # Time to wait before starting health checks
+  restart: always
 networks:
   default:
     name: arr
   traefik:
     external: true
 services:
+  filebrowser-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "filebrowser-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80
+#    ports:
+#      - 80:80
 # filebrowser
   filebrowser:
-    networks:
-      - traefik
+    network_mode: service:filebrowser-ts
+    #networks:
+    #  - traefik
     volumes: !override
       - type: bind
         source: /var/srv/
@@ -25,16 +90,30 @@ services:
         target: /config
         bind:
           create_host_path: true
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.filebrowser.loadbalancer.server.port=80
 
 # jellyfin
+  jellyfin-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "jellyfin-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - "traefik.enable=true"
+      #- "traefik.docker.network=traefik"
+      - "traefik.http.routers.jellyfin.rule=HostRegexp(`^jellyfin${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
   jellyfin:
-    networks:
-      - default
-      - traefik
+    network_mode: service:jellyfin-ts
+    #networks:
+    #  - default
+    #  - traefik
     environment:
       - PUID=1000
       - PGID=1000
@@ -61,21 +140,24 @@ services:
         target: /config
         bind:
           create_host_path: true
-    ports:
-      - 8096:8096
-      - 8920:8920 #optional
-      - 7359:7359/udp #optional
-      - 1900:1900/udp #optional
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.jellyfin.rule=HostRegexp(`^jellyfin${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
 
 
 # plex
+  plex-ts:
+    <<: *ts-sidecar
+    network_mode: host
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "plex-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.rule=HostRegexp(`^plex${TRAEFIK_RULE_SUFFIX}"
+      - traefik.http.services.plex.loadbalancer.server.port=32400
   plex:
+    network_mode: service:plex-ts
     environment:
       - TZ=${TZ}
       - VERSION=latest
@@ -100,18 +182,27 @@ services:
         target: /config
         bind:
           create_host_path: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.plex.rule=HostRegexp(`^plex${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.plex.loadbalancer.server.port=32400
 
     restart: unless-stopped
 
 # Arr stack
+  prowlarr-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "jellyfin-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   prowlarr:
-    networks:
-      - default
-      - traefik
+    network_mode: service:prowlarr-ts
+    #networks:
+    #  - default
+    #  - traefik
     environment:
       - TZ=${TZ}
     volumes:
@@ -120,15 +211,22 @@ services:
         target: /config
         bind:
           create_host_path: true
+  radarr-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "radarr-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.prowlarr.rule=HostRegexp(`^prowlarr${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
+      - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
   radarr:
-    networks:
-      - default
-      - traefik
+    #networks:
+    #  - default
+    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -152,15 +250,23 @@ services:
       #   target: /downloads
       #   bind:
       #     create_host_path: false
+  sonarr-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "sonarr-arr"
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
-      - "traefik.http.routers.radarr.rule=HostRegexp(`^radarr${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
   sonarr:
-    networks:
-      - default
-      - traefik
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    network_mode: service:sonarr-ts
+    #networks:
+    #  - default
+    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -174,17 +280,27 @@ services:
         target: /config
         bind:
           create_host_path: true
+
+# tautulli
+  tautulli-ts:
+    <<: *ts-sidecar
+    ports:
+      - 8181:8181
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "tautulli-arr"
+    extra_hosts:
+      - host.docker.internal=host-gateway
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.sonarr.rule=HostRegexp(`^sonarr${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-
-# tautulli
+      - "traefik.http.routers.tautulli.rule=HostRegexp(`^tautulli${TRAEFIK_RULE_SUFFIX}"
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
   tautulli:
-    networks:
-      - default
-      - traefik
+    network_mode: service:tautulli-ts
+   # networks:
+   #   - default
+   #   - traefik
     environment:
       - TZ=America/New_York
     volumes: !override
@@ -193,14 +309,18 @@ services:
         target: /config
         bind:
           create_host_path: true
-    ports:
-      - 8181:8181
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.tautulli.rule=HostRegexp(`^tautulli${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+  qbittorrent-ts:
+    <<: *ts-sidecar
+    network_mode: host
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "sonarr-arr"
+      labels:
+        - traefik.enable=true
+        - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
+        - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
   qbittorrent:
+      network_mode: service:qbittorrent-ts
       environment:
         - TZ=America/New_York
         - WEBUI_PORT=8112
@@ -222,9 +342,5 @@ services:
           target: /media
           bind:
             create_host_path: true
-      network_mode: host
-      labels:
-        - traefik.enable=true
-        - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
-        - traefik.http.services.qbittorrent.loadbalancer.server.port=8112
+      #network_mode: host
       restart: unless-stopped
