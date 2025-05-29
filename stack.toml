@@ -28,12 +28,11 @@ file_paths = [
 ]
 env_file_path = "compose.env"
 environment = """
-TRAEFIK_HOSTNAME=mediaboxlite
-TRAEFIK_FQDN=mediaboxlite.ibeep.com
 TRAEFIK_DOCKER_NETWORK=traefik
-TRAEFIK_RULE_SUFFIX="\\.${TRAEFIK_HOSTNAME}(?:\\..*)*$$`)"
 TZ=America/New_York
 SONARR_API_KEY=[[OP__KOMODO__SONARR_API_KEY__CREDENTIAL]]
+TRAEFIK_RULE_PREFIX=[[OP__KOMODO__TRAEFIK__RULE_PREFIX]]
+TRAEFIK_RULE_SUFFIX=[[OP__KOMODO__TRAEFIK__RULE_SUFFIX]]
 """
 
 ##
