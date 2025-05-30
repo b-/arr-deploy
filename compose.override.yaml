@@ -74,9 +74,10 @@ services:
   filebrowser:
     ports: !reset [null]
     network_mode: service:filebrowser-ts
+    command: ["--password", "${FILEBROWSER_PASSWORD_HASH}"]
     #networks:
     #  - traefik
-    volumes: !override
+    volumes: !reset
       - type: bind
         source: /var/srv/
         target: /srv

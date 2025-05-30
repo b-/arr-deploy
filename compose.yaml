@@ -6,13 +6,11 @@ services:
     volumes:
       - /var/srv:/srv
       - /var/srv/filebrowser/filebrowser.db:/database/filebrowser.db
-      - /var/srv/filebrowser/settings.json:/config/settings.json
-    environment:
-      - PUID=1000
-      - PGID=1000
+      - /var/srv/filebrowser/.filebrowser.json:/.filebrowser.json
+    user: 1000:1000
     ports:
       - 127.0.0.1:8080:80
-    image: filebrowser/filebrowser:s6
+    image: filebrowser/filebrowser
 
 # jellyfin
   jellyfin:
