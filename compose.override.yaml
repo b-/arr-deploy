@@ -21,6 +21,27 @@ configs:
               "$${TS_CERT_DOMAIN}:443": true
           }
       }
+  qb_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8112"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": true
+          }
+      }
 
 x-ts-sidecar: &ts-sidecar
   # volumes:
@@ -338,6 +359,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "qb-mediaboxlite"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: qb_serve
+        target: /config/ts_serve.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
