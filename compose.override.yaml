@@ -84,8 +84,8 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: /var/srv/filebrowser/database
-        target: /database
+        source: /var/srv/filebrowser/filebrowser.db
+        target: /database.db
         bind:
           create_host_path: true
       - type: bind
