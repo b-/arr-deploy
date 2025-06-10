@@ -19,6 +19,7 @@ links = [
 ]
 poll_for_updates = true
 auto_update = true
+auto_update_all_services = true
 git_account = "b-"
 repo = "b-/arr-deploy"
 reclone = true
@@ -27,6 +28,7 @@ file_paths = [
   "compose.override.yaml"
 ]
 env_file_path = "compose.env"
+extra_args = ["--remove-orphans"]
 environment = """
 TRAEFIK_DOCKER_NETWORK=traefik
 TZ=America/New_York
@@ -35,6 +37,7 @@ TRAEFIK_RULE_PREFIX=[[OP__KOMODO__TRAEFIK__RULE_PREFIX]]
 TRAEFIK_RULE_SUFFIX=[[OP__KOMODO__TRAEFIK__RULE_SUFFIX]]
 TS_AUTHKEY=[[OP__KOMODO__TAILSCALE_OP__CLIENT_SECRET]]?ephemeral=true
 FILEBROWSER_PASSWORD_HASH=[[OP__KOMODO__FILEBROWSER_PASSWORD_HASH__BCRYPT]]
+bri_password=[[OP__KOMODO__SMB_BRI__PASSWORD]]
 """
 
 ##
