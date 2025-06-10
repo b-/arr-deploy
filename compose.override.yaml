@@ -336,7 +336,7 @@ services:
     network_mode: host
     environment:
       <<: *ts-env
-      TS_HOSTNAME: "sonarr-arr"
+      TS_HOSTNAME: "qb-mediaboxlite"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
