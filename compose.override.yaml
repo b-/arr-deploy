@@ -1,5 +1,31 @@
 ---
+secrets:
+  bri_password:
+    environment: bri_password
+  ts_authkey:
+    environment: TS_AUTHKEY
 configs:
+  samba_config.yml:
+    content: |
+      auth:
+        - user: bri
+          group: bri
+          uid: 1000
+          gid: 1000
+          password_file: /run/secrets/bri_password
+      global:
+        - "force user = bri"
+        - "force group = bri"
+      share:
+        - name: host
+          path: /host
+          browsable: yes
+          readonly: no
+          guestok: no
+          validusers: bri
+          writelist: bri
+          veto: no
+          #hidefiles: /_*/
   whoami_serve:
     content: |
       {
@@ -394,3 +420,25 @@ services:
             create_host_path: true
       #network_mode: host
       restart: unless-stopped
+# samba
+  samba:
+    secrets:
+      - bri_password
+    configs:
+      - source: samba_config.yml
+        target: /data/config.yml
+    image: crazymax/samba
+    container_name: samba
+    network_mode: host
+    volumes:
+      - /:/host
+    environment:
+      - "TZ=$TIMEZONE"
+      #- "SAMBA_LOG_LEVEL=0"
+    restart: always
+  wsdd:
+    image: jonasped/wsdd
+    network_mode: host
+    environment:
+      - 'HOSTNAME=$HOSTNAME'
+    restart: always
