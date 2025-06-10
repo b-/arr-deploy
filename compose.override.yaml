@@ -88,7 +88,7 @@ services:
         target: /database.db
         bind:
           create_host_path: false
-        selinux: z
+        selinux: Z
       - type: bind
         source: /var/srv/apps/filebrowser/config
         target: /config
