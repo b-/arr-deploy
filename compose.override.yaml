@@ -121,7 +121,7 @@ services:
   filebrowser:
     ports: !reset [null]
     network_mode: service:filebrowser-ts
-    command: ["--password", "${FILEBROWSER_PASSWORD_HASH}"]
+    command: ["--password", "${FILEBROWSER_PASSWORD_HASH}", "-d", "/tmp/db"]
     #networks:
     #  - traefik
     volumes: !reset
