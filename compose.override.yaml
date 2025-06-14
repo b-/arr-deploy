@@ -130,17 +130,17 @@ services:
         target: /srv
         bind:
           create_host_path: false
-      - type: bind
-        source: /var/srv/filebrowser/filebrowser.db
-        target: /database.db
-        bind:
-          create_host_path: false
-        selinux: Z
-      - type: bind
-        source: /var/srv/apps/filebrowser/config
-        target: /config
-        bind:
-          create_host_path: true
+      #- type: bind
+      #  source: /var/srv/filebrowser/filebrowser.db
+      #  target: /database.db
+      #  bind:
+      #    create_host_path: false
+      #  selinux: Z
+      #- type: bind
+      #  source: /var/srv/apps/filebrowser/config
+      #  target: /config
+      #  bind:
+      #    create_host_path: true
 
 # jellyfin
   jellyfin-ts:
