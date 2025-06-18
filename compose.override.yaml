@@ -436,7 +436,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
-      - "kop.qbittorrent.bind.ip=qbittorrent-arr.shark-perch.ts.net"
+      - "kop.qbittorrent.bind.ip=qb-mediaboxlite.shark-perch.ts.net"
   qbittorrent:
       ports: !reset [null]
       network_mode: service:qbittorrent-ts
