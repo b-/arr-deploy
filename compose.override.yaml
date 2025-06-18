@@ -117,6 +117,8 @@ networks:
 services:
   filebrowser-ts:
     <<: *ts-sidecar
+    networks:
+      - traefik
     environment:
       <<: *ts-env
       TS_HOSTNAME: "filebrowser-arr"
