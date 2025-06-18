@@ -10,7 +10,7 @@ services:
     user: 1000:1000
     ports:
       - 127.0.0.1:8080:80
-    image: filebrowser/filebrowser
+    image: ghcr.io/gtsteffaniak/filebrowser
 
 # jellyfin
   jellyfin:
