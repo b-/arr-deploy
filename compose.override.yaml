@@ -5,6 +5,18 @@ secrets:
   ts_authkey:
     environment: TS_AUTHKEY
 configs:
+  filebrowser.yml:
+    content: |
+      server:
+        database: /tmp/filebrowser.db
+        sources:
+          - path: /
+            name: /
+      auth:
+        key: "${FILEBROWSER_PASSWORD_HASH}"
+        adminUsername: admin
+        adminPassword: "${FILEBROWSER_PASSWORD}"
+        resetAdminOnStart: true
   samba_config.yml:
     content: |
       auth:
@@ -119,9 +131,15 @@ services:
 #      - 80:80
 # filebrowser
   filebrowser:
-    ports: !reset [null]
-    network_mode: service:filebrowser-ts
-    command: ["--password", "${FILEBROWSER_PASSWORD_HASH}", "-d", "/tmp/db"]
+    configs:
+      - filebrowser.yml
+    #ports: !reset [null]
+    ports: !override
+      - 8080:80
+    user: !reset [null]
+    #network_mode: service:filebrowser-ts
+    #command: ["--password", "${FILEBROWSER_PASSWORD_HASH}", "-d", "/tmp/db"]
+    command: [ "-c", "/filebrowser.yml"]
     #networks:
     #  - traefik
     volumes: !reset
@@ -438,4 +456,3 @@ services:
       - "SAMBA_HOSTS_ALLOW=127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10"
       #- "SAMBA_LOG_LEVEL=0"
     restart: always
-  
