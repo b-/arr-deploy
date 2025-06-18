@@ -38,6 +38,27 @@ configs:
           writelist: bri
           veto: no
           #hidefiles: /_*/
+  filebrowser_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:80"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
   whoami_serve:
     content: |
       {
@@ -124,7 +145,7 @@ services:
       TS_HOSTNAME: "filebrowser-arr"
       TS_SERVE_CONFIG: /config/ts_serve.json
     configs:
-      - source: whoami_serve
+      - source: filebrowser_serve
         target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
@@ -140,8 +161,7 @@ services:
     configs:
       - filebrowser.yml
     #ports: !reset [null]
-    ports: !override
-      - 8080:80
+    ports: !reset null
     user: !reset [null]
     network_mode: service:filebrowser-ts
     command: [ "-c", "/filebrowser.yml"]
