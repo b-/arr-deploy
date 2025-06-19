@@ -28,6 +28,7 @@ configs:
       global:
         - "force user = bri"
         - "force group = bri"
+        - "acl allow execute always = yes"
       share:
         - name: host
           path: /host
