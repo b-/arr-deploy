@@ -475,7 +475,7 @@ services:
     container_name: samba
     network_mode: host
     volumes:
-      - /:/host
+      - /:/host:Z
     environment:
       - "TZ=$TIMEZONE"
       - "WSDD2_ENABLE=1"
