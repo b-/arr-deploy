@@ -20,9 +20,7 @@ links = [
 poll_for_updates = true
 auto_update = true
 auto_update_all_services = true
-git_account = "b-"
-repo = "b-/arr-deploy"
-reclone = true
+linked_repo = "arr"
 file_paths = [
   "compose.yaml",
   "compose.override.yaml"
@@ -53,8 +51,7 @@ tags = [
   "sync"
 ]
 [resource_sync.config]
-repo = "b-/arr-deploy"
-git_account = "b-"
+linked_repo = "arr"
 resource_path = ["stack.toml"]
 managed = true
 match_tags = ["mediaboxlite-arr"]
