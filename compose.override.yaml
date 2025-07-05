@@ -16,7 +16,6 @@ configs:
         key: "${FILEBROWSER_PASSWORD_HASH}"
         adminUsername: admin
         adminPassword: "${FILEBROWSER_PASSWORD}"
-        resetAdminOnStart: true
   samba_config.yml:
     content: |
       auth:
