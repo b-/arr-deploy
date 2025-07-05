@@ -20,6 +20,7 @@ links = [
 poll_for_updates = true
 auto_update = true
 auto_update_all_services = true
+destroy_before_deploy = true
 linked_repo = "arr"
 file_paths = [
   "compose.yaml",
