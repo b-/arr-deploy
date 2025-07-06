@@ -93,6 +93,21 @@ services:
       - 8989:8989
     restart: unless-stopped
 
+    lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/lidarr/data:/config
+      - /path/to/music:/music #optional
+      - /path/to/downloadclient-downloads:/downloads #optional
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
 # qbittorrent
   qbittorrent:
       image: lscr.io/linuxserver/qbittorrent:5.1.0
