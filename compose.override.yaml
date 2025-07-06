@@ -735,6 +735,7 @@ services:
 
   syncthing-ts:
     <<: *ts-sidecar
+    hostname: syncthing
     environment:
       <<: *ts-env
       TS_HOSTNAME: "syncthing-arr"
@@ -752,6 +753,7 @@ services:
       - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
   syncthing:
     ports: !reset [null]
+    hostname: !reset null
     network_mode: service:syncthing-ts
     #networks:
     #  - default
