@@ -836,6 +836,6 @@ services:
           create_host_path: false
       - type: bind
         source: /var/srv/apps/jellyseerr/data
-        target: /config
+        target: /app/config
         bind:
           create_host_path: true
