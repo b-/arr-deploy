@@ -760,7 +760,12 @@ services:
     #  - traefik
     environment:
       - TZ=${TZ}
-    volumes:
+    volumes: !override
+      - type: bind
+        source: /var/srv/media
+        target: /media
+        bind:
+          create_host_path: false
       - type: bind
         source: /var/srv/apps/syncthing/data
         target: /config
