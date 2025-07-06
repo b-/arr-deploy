@@ -59,6 +59,139 @@ configs:
               "$${TS_CERT_DOMAIN}:443": false
           }
       }
+
+  jellyfin_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8096"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": true
+          }
+      }
+
+  plex_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:32400"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": true
+          }
+      }
+
+  prowlarr_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:9696"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
+
+  radarr_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:7878"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
+
+  sonarr_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8989"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
+
+  lidarr_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8686"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
+
   whoami_serve:
     content: |
       {
@@ -101,6 +234,27 @@ configs:
               "$${TS_CERT_DOMAIN}:443": false
           }
       }
+  tautulli_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8181"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
 
 x-ts-sidecar: &ts-sidecar
   # volumes:
@@ -130,6 +284,7 @@ x-ts-sidecar: &ts-sidecar
     retries: 3 # Number of retries before marking as unhealthy
     start_period: 10s # Time to wait before starting health checks
   restart: always
+  
 networks:
   default:
     name: arr
@@ -192,6 +347,10 @@ services:
       <<: *ts-env
       TS_HOSTNAME: "jellyfin-arr"
       TS_LOCAL_ADDR_PORT: 127.0.0.1:41236
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: jellyfin_serve
+        target: /config/ts_serve.json
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:41236/healthz"] # Check Tailscale has a Tailnet IP and is operational
     extra_hosts:
@@ -250,6 +409,10 @@ services:
       <<: *ts-env
       TS_HOSTNAME: "plex-arr"
       TS_LOCAL_ADDR_PORT: 127.0.0.1:41235
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: plex_serve
+        target: /config/ts_serve.json
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:41235/healthz"] # Check Tailscale has a Tailnet IP and is operational
     extra_hosts:
@@ -295,6 +458,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "prowlarr-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: prowlarr_serve
+        target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
     labels:
@@ -322,6 +489,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "radarr-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: radarr_serve
+        target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
     labels:
@@ -364,6 +535,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "sonarr-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: sonarr_serve
+        target: /config/ts_serve.json
     labels:
       - "traefik.enable=true"
       #- "traefik.docker.network=traefik"
@@ -397,13 +572,17 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "lidarr-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: lidarr_serve
+        target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
     labels:
       - "traefik.enable=true"
       #- "traefik.docker.network=${TRAEFIK_DOCKER_NETWORK}"
       - "traefik.http.routers.lidarr.rule=HostRegexp(`^lidarr${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.lidarr.loadbalancer.server.port=7878"
+      - "traefik.http.services.lidarr.loadbalancer.server.port=8686"
       - "kop.lidarr.bind.ip=lidarr-arr.shark-perch.ts.net"
   lidarr:
     network_mode: service:lidarr-ts
@@ -444,6 +623,10 @@ services:
     environment:
       <<: *ts-env
       TS_HOSTNAME: "tautulli-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: tautulli_serve
+        target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
     labels:
