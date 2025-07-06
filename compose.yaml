@@ -138,6 +138,26 @@ services:
       - 8181:8181
     restart: unless-stopped
 
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    hostname: syncthing #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/syncthing/config:/config
+      - /path/to/data1:/data1
+      - /path/to/data2:/data2
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+
+
 configs:
   upnp:
     # /etc/upnp-service/upnp.json
@@ -150,6 +170,14 @@ configs:
                   "redirections": [
                       ["32400", "TCP"],
                       ["32400", "UDP"]
+                  ]
+              },
+              {
+                  "app_name": "syncthing",
+                  "redirections": [
+                      ["22000", "UDP"],
+                      ["22000", "TCP"],
+                      ["21027", "UDP"]
                   ]
               },
               {

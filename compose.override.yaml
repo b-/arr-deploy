@@ -256,6 +256,28 @@ configs:
           }
       }
 
+  syncthing_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:8384"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": false
+          }
+      }
+
 x-ts-sidecar: &ts-sidecar
   # volumes:
   #   - ts_state:/ts_state
@@ -709,3 +731,36 @@ services:
       - "SAMBA_HOSTS_ALLOW=127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10"
       #- "SAMBA_LOG_LEVEL=0"
     restart: always
+
+
+  syncthing-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "syncthing-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: syncthing_serve
+        target: /config/ts_serve.json
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - "traefik.enable=true"
+      #- "traefik.docker.network=traefik"
+      - "traefik.http.routers.syncthing.rule=HostRegexp(`^syncthing${TRAEFIK_RULE_SUFFIX}"
+      - "kop.syncthing.bind.ip=syncthing-arr.shark-perch.ts.net"
+      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
+  syncthing:
+    ports: !reset [null]
+    network_mode: service:syncthing-ts
+    #networks:
+    #  - default
+    #  - traefik
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - type: bind
+        source: /var/srv/apps/syncthing/data
+        target: /config
+        bind:
+          create_host_path: true
