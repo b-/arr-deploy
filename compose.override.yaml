@@ -585,6 +585,7 @@ services:
       - "traefik.http.services.lidarr.loadbalancer.server.port=8686"
       - "kop.lidarr.bind.ip=lidarr-arr.shark-perch.ts.net"
   lidarr:
+    image: docker.io/blampe/lidarr:latest
     network_mode: service:lidarr-ts
     ports: !reset [null]
     #networks:
