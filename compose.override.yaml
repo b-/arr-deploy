@@ -278,6 +278,28 @@ configs:
           }
       }
 
+  jellyseerr_serve:
+    content: |
+      {
+          "TCP": {
+              "443": {
+                  "HTTPS": true
+              }
+          },
+          "Web": {
+              "$${TS_CERT_DOMAIN}:443": {
+                  "Handlers": {
+                      "/": {
+                          "Proxy": "http://localhost:5055"
+                      }
+                  }
+              }
+          },
+          "AllowFunnel": {
+              "$${TS_CERT_DOMAIN}:443": true
+          }
+      }
+
 x-ts-sidecar: &ts-sidecar
   # volumes:
   #   - ts_state:/ts_state
@@ -745,6 +767,11 @@ services:
         target: /config/ts_serve.json
     extra_hosts:
       - host.docker.internal=host-gateway
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
     labels:
       - "traefik.enable=true"
       #- "traefik.docker.network=traefik"
@@ -768,6 +795,47 @@ services:
           create_host_path: false
       - type: bind
         source: /var/srv/apps/syncthing/data
+        target: /config
+        bind:
+          create_host_path: true
+
+  jellyseerr-ts:
+    <<: *ts-sidecar
+    hostname: jellyseerr
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "jellyseerr-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: jellyseerr_serve
+        target: /config/ts_serve.json
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    labels:
+      - "traefik.enable=true"
+      #- "traefik.docker.network=traefik"
+      - "traefik.http.routers.jellyseerr.rule=HostRegexp(`^jellyseerr${TRAEFIK_RULE_SUFFIX}"
+      - "kop.jellyseerr.bind.ip=jellyseerr-arr.shark-perch.ts.net"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+    ports:
+      - 5055:5055
+  jellyseerr:
+    ports: !reset [null]
+    hostname: !reset null
+    network_mode: service:jellyseerr-ts
+    #networks:
+    #  - default
+    #  - traefik
+    environment:
+      - TZ=${TZ}
+    volumes: !override
+      - type: bind
+        source: /var/srv/media
+        target: /media
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/srv/apps/jellyseerr/data
         target: /config
         bind:
           create_host_path: true
