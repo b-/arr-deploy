@@ -10,8 +10,8 @@ configs:
       server:
         database: /tmp/filebrowser.db
         sources:
-          - path: /
-            name: /
+          - path: /var/srv
+            name: /var/srv
       auth:
         key: "${FILEBROWSER_PASSWORD_HASH}"
         adminUsername: admin
@@ -368,8 +368,8 @@ services:
     #  - traefik
     volumes: !override
       - type: bind
-        source: /var/srv/
-        target: /srv
+        source: /var/srv
+        target: /var/srv
         bind:
           create_host_path: false
       #- type: bind
