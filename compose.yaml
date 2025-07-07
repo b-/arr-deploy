@@ -202,6 +202,13 @@ configs:
                       ["7359", "UDP"],
                       ["1900", "UDP"]
                   ]
+              },
+              {
+                  "app_name": "bittorrent",
+                  "redirections": [
+                      ["51412", "TCP"],
+                      ["51412", "UDP"]
+                  ]
               }
         ]
       }
