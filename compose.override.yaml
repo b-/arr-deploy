@@ -366,7 +366,7 @@ services:
     command: [ "-c", "/filebrowser.yml"]
     #networks:
     #  - traefik
-    volumes: !reset
+    volumes: !override
       - type: bind
         source: /var/srv/
         target: /srv
