@@ -530,13 +530,9 @@ x-ts-sidecar: &ts-sidecar
 networks:
   default:
     name: arr
-  traefik:
-    external: true
 services:
   filebrowser-ts:
     <<: *ts-sidecar
-    networks:
-      - traefik
     environment:
       <<: *ts-env
       TS_HOSTNAME: "filebrowser-arr"
@@ -562,8 +558,6 @@ services:
     user: !reset [null]
     network_mode: service:filebrowser-ts
     command: [ "-c", "/filebrowser.yml"]
-    #networks:
-    #  - traefik
     volumes: !override
       - type: bind
         source: /var/srv
@@ -611,9 +605,6 @@ services:
   jellyfin:
     network_mode: service:jellyfin-ts
     ports: !reset [null]
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - PUID=1000
       - PGID=1000
@@ -715,9 +706,6 @@ services:
   prowlarr:
     ports: !reset [null]
     network_mode: service:prowlarr-ts
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes:
@@ -746,9 +734,6 @@ services:
   radarr:
     network_mode: service:radarr-ts
     ports: !reset [null]
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -792,9 +777,6 @@ services:
   sonarr:
     ports: !reset [null]
     network_mode: service:sonarr-ts
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -830,9 +812,6 @@ services:
     image: docker.io/blampe/lidarr:latest
     network_mode: service:lidarr-ts
     ports: !reset [null]
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -881,9 +860,6 @@ services:
   tautulli:
     network_mode: service:tautulli-ts
     ports: !reset [null]
-   # networks:
-   #   - default
-   #   - traefik
     environment:
       - TZ=America/New_York
     volumes: !override
@@ -980,9 +956,6 @@ services:
     ports: !reset [null]
     hostname: !reset null
     network_mode: service:syncthing-ts
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
@@ -1021,9 +994,6 @@ services:
     ports: !reset [null]
     hostname: !reset null
     network_mode: service:jellyseerr-ts
-    #networks:
-    #  - default
-    #  - traefik
     environment:
       - TZ=${TZ}
     volumes: !override
