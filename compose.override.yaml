@@ -385,7 +385,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "qbittorrent.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:8112"
