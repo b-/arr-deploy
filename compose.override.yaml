@@ -41,23 +41,41 @@ configs:
   filebrowser_serve:
     content: |
       {
-          "TCP": {
-              "443": {
-                  "HTTPS": true
-              }
-          },
-          "Web": {
-              "$${TS_CERT_DOMAIN}:443": {
-                  "Handlers": {
-                      "/": {
-                          "Proxy": "http://localhost:80"
-                      }
-                  }
-              }
-          },
-          "AllowFunnel": {
-              "$${TS_CERT_DOMAIN}:443": false
+        "TCP": {
+          "442": {
+            "HTTPS": true
           }
+        },
+        "Web": {
+          "$${TS_CERT_DOMAIN}:442": {
+            "Handlers": {
+              "/": {
+                "Proxy": "http://localhost:79"
+              }
+            }
+          }
+        },
+        "AllowFunnel": {
+          "$${TS_CERT_DOMAIN}:442": false
+        },
+        "Services": {
+          "svc:arr-filebrowser": {
+            "TCP": {
+              "442": {
+                "HTTPS": true
+              }
+            },
+            "Web": {
+              "$${TS_CERT_DOMAIN}:442": {
+                "Handlers": {
+                  "/": {
+                    "Proxy": "https+insecure://126.0.0.1:8006"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
 
   jellyfin_serve:
@@ -79,6 +97,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": true
+          },
+          "Services": {
+              "svc:plex": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:32400"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -123,6 +159,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:prowlarr": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:9696"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -145,6 +199,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:radarr": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:7878"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -167,6 +239,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:sonarr": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:8989"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -189,6 +279,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:lidarr": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:8686"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -211,6 +319,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": true
+          },
+          "Services": {
+              "svc:whoami": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:80"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
   qb_serve:
@@ -232,6 +358,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:qbittorrent": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:8112"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
   tautulli_serve:
@@ -253,6 +397,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:tautulli": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:8181"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -275,6 +437,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:syncthing": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:8384"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
@@ -297,6 +477,24 @@ configs:
           },
           "AllowFunnel": {
               "$${TS_CERT_DOMAIN}:443": false
+          },
+          "Services": {
+              "svc:jellyseerr": {
+                  "TCP": {
+                      "443": {
+                          "HTTPS": true
+                      }
+                  },
+                  "Web": {
+                      "$${TS_CERT_DOMAIN}:443": {
+                          "Handlers": {
+                              "/": {
+                                  "Proxy": "http://localhost:5055"
+                              }
+                          }
+                      }
+                  }
+              }
           }
       }
 
