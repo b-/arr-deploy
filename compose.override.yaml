@@ -1025,3 +1025,17 @@ services:
         target: /app/config
         bind:
           create_host_path: true
+  whoami-ts:
+    <<: *ts-sidecar
+    environment:
+      <<: *ts-env
+      TS_HOSTNAME: "whoami-arr"
+      TS_SERVE_CONFIG: /config/ts_serve.json
+    configs:
+      - source: whoami_serve
+        target: /config/ts_serve.json
+    ports:
+      - 8123:80
+  whoami:
+    image: traefik/whoami:latest
+    network_mode: service:whoami-ts
