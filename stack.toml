@@ -30,18 +30,18 @@ env_file_path = "compose.env"
 post_deploy.command = """
   # Add multiple commands on new lines. Supports comments.
   sleep 30s
-  docker compose exec filebrowser-ts tailscale serve advertise svc:arr-filebrowser
-  docker compose exec jellyfin-ts tailscale serve advertise svc:jellyfin
-  docker compose exec plex-ts tailscale serve advertise svc:plex
-  docker compose exec prowlarr-ts tailscale serve advertise svc:prowlarr
-  docker compose exec radarr-ts tailscale serve advertise svc:radarr
-  docker compose exec sonarr-ts tailscale serve advertise svc:sonarr
-  docker compose exec lidarr-ts tailscale serve advertise svc:lidarr
-  docker compose exec whoami-ts tailscale serve advertise svc:whoami
-  docker compose exec qbittorrent-ts tailscale serve advertise svc:qbittorrent
-  docker compose exec tautulli-ts tailscale serve advertise svc:tautulli
-  docker compose exec syncthing-ts tailscale serve advertise svc:syncthing
-  docker compose exec jellyseerr-ts tailscale serve advertise svc:jellyseerr
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec filebrowser-ts tailscale serve advertise svc:arr-filebrowser
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec jellyfin-ts tailscale serve advertise svc:jellyfin
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec plex-ts tailscale serve advertise svc:plex
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec prowlarr-ts tailscale serve advertise svc:prowlarr
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec radarr-ts tailscale serve advertise svc:radarr
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec sonarr-ts tailscale serve advertise svc:sonarr
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec lidarr-ts tailscale serve advertise svc:lidarr
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec whoami-ts tailscale serve advertise svc:whoami
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec qbittorrent-ts tailscale serve advertise svc:qbittorrent
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec tautulli-ts tailscale serve advertise svc:tautulli
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec syncthing-ts tailscale serve advertise svc:syncthing
+  docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env exec jellyseerr-ts tailscale serve advertise svc:jellyseerr
 """
 extra_args = ["--remove-orphans"]
 environment = """
