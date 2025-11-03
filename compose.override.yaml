@@ -655,6 +655,7 @@ services:
     network_mode: host
     environment:
       <<: *ts-env
+      TS_USERSPACE: true # to avoid conflicts with host TS
       TS_HOSTNAME: "plex-arr"
       TS_LOCAL_ADDR_PORT: 127.0.0.1:41235
       TS_SERVE_CONFIG: /config/ts_serve.json
