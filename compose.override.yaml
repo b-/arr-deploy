@@ -522,7 +522,7 @@ x-ts-sidecar: &ts-sidecar
   image: tailscale/tailscale:latest
   environment: &ts-env
     TS_AUTHKEY: ${TS_AUTHKEY}
-    TS_EXTRA_ARGS: "--advertise-tags=tag:docker"
+    TS_EXTRA_ARGS: "--advertise-tags=tag:docker --accept-routes"
     #TS_USERSPACE: false
     TS_ENABLE_HEALTH_CHECK: true
     TS_LOCAL_ADDR_PORT: 127.0.0.1:41234
