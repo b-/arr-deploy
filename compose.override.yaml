@@ -889,6 +889,7 @@ services:
     network_mode: host
     environment:
       <<: *ts-env
+      TS_USERSPACE: true # to avoid conflicts with host TS
       TS_HOSTNAME: "qb-mediaboxlite"
       TS_SERVE_CONFIG: /config/ts_serve.json
     configs:
