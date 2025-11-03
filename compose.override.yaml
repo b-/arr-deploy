@@ -66,7 +66,7 @@ configs:
               }
             },
             "Web": {
-              "$${TS_CERT_DOMAIN}:443": {
+              "arr-filebrowser.shark-perch.ts.net:443": {
                 "Handlers": {
                   "/": {
                     "Proxy": "https+insecure://126.0.0.1:8006"
@@ -106,7 +106,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "jellyfin.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:32400"
@@ -146,7 +146,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "plex.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:32400"
@@ -186,7 +186,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "prowlarr.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:9696"
@@ -226,7 +226,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "radarr.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:7878"
@@ -266,7 +266,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "sonarr.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:8989"
@@ -306,7 +306,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "lidarr.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:8686"
@@ -346,7 +346,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "whoami.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:80"
@@ -424,7 +424,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "tautulli.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:8181"
@@ -464,7 +464,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "syncthing.shark-perch.ts.net:443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:8384"
@@ -504,7 +504,7 @@ configs:
                       }
                   },
                   "Web": {
-                      "$${TS_CERT_DOMAIN}:443": {
+                      "jellyseerr.shark-perch.ts.net::443": {
                           "Handlers": {
                               "/": {
                                   "Proxy": "http://localhost:5055"
