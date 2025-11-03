@@ -20,12 +20,28 @@ links = [
 poll_for_updates = true
 auto_update = true
 auto_update_all_services = true
+destroy_before_deploy = true
 linked_repo = "arr"
 file_paths = [
   "compose.yaml",
   "compose.override.yaml"
 ]
 env_file_path = "compose.env"
+post_deploy.command = """
+  # Add multiple commands on new lines. Supports comments.
+  docker compose exec filebrowser-ts tailscale serve advertise svc:arr-filebrowser
+  docker compose exec jellyfin-ts tailscale serve advertise svc:jellyfin
+  docker compose exec plex-ts tailscale serve advertise svc:plex
+  docker compose exec prowlarr-ts tailscale serve advertise svc:prowlarr
+  docker compose exec radarr-ts tailscale serve advertise svc:radarr
+  docker compose exec sonarr-ts tailscale serve advertise svc:sonarr
+  docker compose exec lidarr-ts tailscale serve advertise svc:lidarr
+  docker compose exec whoami-ts tailscale serve advertise svc:whoami
+  docker compose exec qbittorrent-ts tailscale serve advertise svc:qbittorrent
+  docker compose exec tautulli-ts tailscale serve advertise svc:tautulli
+  docker compose exec syncthing-ts tailscale serve advertise svc:syncthing
+  docker compose exec jellyseerr-ts tailscale serve advertise svc:jellyseerr
+"""
 extra_args = ["--remove-orphans"]
 environment = """
 TRAEFIK_DOCKER_NETWORK=traefik
