@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 COMPOSE=(docker compose -p mediaboxlite-arr -f compose.yaml -f compose.override.yaml --env-file compose.env)
-echo ========
-env
-echo ========
 checkhealth() {
 	local service=$1
 	"${COMPOSE[@]}" ps --format json | jq  --arg svc "${service}" 'select(.Service == $svc) | (.Health // "healthy") == "healthy"'
