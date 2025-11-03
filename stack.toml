@@ -29,6 +29,7 @@ file_paths = [
 env_file_path = "compose.env"
 post_deploy.command = """
   # Add multiple commands on new lines. Supports comments.
+  sleep 30s
   docker compose exec filebrowser-ts tailscale serve advertise svc:arr-filebrowser
   docker compose exec jellyfin-ts tailscale serve advertise svc:jellyfin
   docker compose exec plex-ts tailscale serve advertise svc:plex
