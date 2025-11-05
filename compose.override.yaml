@@ -527,6 +527,7 @@ x-ts-sidecar: &ts-sidecar
     TS_ENABLE_HEALTH_CHECK: true
     TS_LOCAL_ADDR_PORT: 127.0.0.1:41234
     TS_STATE: "mem:"
+    TS_ACCEPT_DNS: true
     #TS_SERVE_CONFIG: /config/serve.json
     #TS_AUTHKEY: tskey-auth-kS5WUC4XYe11CNTRL-AT7DucG3DnhrX8j6rmPdhhcuN2mRerBk
     #TS_HOSTNAME: generic-sidecar
