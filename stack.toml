@@ -57,4 +57,4 @@ tags = [
 linked_repo = "arr"
 resource_path = ["stack.toml"]
 managed = true
-match_tags = ["mediaboxlite-arr", "arr"]
+match_tags = ["mediaboxlite-arr"]
