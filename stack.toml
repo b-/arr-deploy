@@ -48,10 +48,10 @@ bri_password=[[OP__KOMODO__SMB_BRI__PASSWORD]]
 [[resource_sync]]
 name = "mediaboxlite-arr"
 tags = [
-  "mediaboxlite",
   "mediaboxlite-arr",
   "arr",
-  "sync"
+  "sync",
+  "mediaboxlite"
 ]
 [resource_sync.config]
 linked_repo = "arr"
