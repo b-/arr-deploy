@@ -899,25 +899,25 @@ services:
         target: /config
         bind:
           create_host_path: true
-  qbittorrent-ts:
-    <<: *ts-sidecar
-    network_mode: host
-    environment:
-      <<: *ts-env
-      TS_USERSPACE: true # to avoid conflicts with host TS
-      TS_HOSTNAME: "qb-mediaboxlite"
-      TS_SERVE_CONFIG: /config/ts_serve.json
+  #qbittorrent-ts:
+  #  <<: *ts-sidecar
+  #  network_mode: host
+  #  environment:
+  #    <<: *ts-env
+  #    TS_USERSPACE: true # to avoid conflicts with host TS
+  #    TS_HOSTNAME: "qb-mediaboxlite"
+  #    TS_SERVE_CONFIG: /config/ts_serve.json
     #configs:
     #  - source: qb_serve
     #    target: /config/ts_serve.json
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
-      - "kop.qbittorrent.bind.ip=qb-mediaboxlite.shark-perch.ts.net"
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
+  #    - "traefik.http.services.qbittorrent.loadbalancer.server.port=8112"
+  #    - "kop.qbittorrent.bind.ip=qb-mediaboxlite.shark-perch.ts.net"
   qbittorrent:
-      ports: !reset [null]
-      network_mode: service:qbittorrent-ts
+  #    ports: !reset [null]
+      network_mode: host # service:qbittorrent-ts
       environment:
         - TZ=America/New_York
         - WEBUI_PORT=8112
