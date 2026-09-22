@@ -27,7 +27,7 @@ file_paths = [
 ]
 env_file_path = "compose.env"
 post_deploy.command = """
- # ./advertise.sh
+  ./advertise.sh
 """
 post_deploy.shell_mode = true
 extra_args = ["--remove-orphans"]
