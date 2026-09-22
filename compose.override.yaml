@@ -562,8 +562,6 @@ networks:
     name: arr
 services:
   filebrowser-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:arr-filebrowser"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -610,8 +608,6 @@ services:
 
 # jellyfin
   jellyfin-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:jellyfin"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -670,8 +666,6 @@ services:
 
 # plex
   plex-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:plex"
     <<: *ts-sidecar
     network_mode: host
     environment:
@@ -724,8 +718,6 @@ services:
 
 # Arr stack
   prowlarr-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:prowlarr"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -754,8 +746,6 @@ services:
         bind:
           create_host_path: true
   radarr-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:radarr"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -799,8 +789,6 @@ services:
       #   bind:
       #     create_host_path: false
   sonarr-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:sonarr"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -835,8 +823,6 @@ services:
           create_host_path: true
 
   lidarr-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:lidarr"
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -884,8 +870,6 @@ services:
 
 # tautulli
   tautulli-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:tautulli"
     <<: *ts-sidecar
     ports:
       - 8181:8181
@@ -916,8 +900,6 @@ services:
         bind:
           create_host_path: true
   qbittorrent-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:qbittorrent"
     <<: *ts-sidecar
     network_mode: host
     environment:
@@ -925,9 +907,9 @@ services:
       TS_USERSPACE: true # to avoid conflicts with host TS
       TS_HOSTNAME: "qb-mediaboxlite"
       TS_SERVE_CONFIG: /config/ts_serve.json
-    configs:
-      - source: qb_serve
-        target: /config/ts_serve.json
+    #configs:
+    #  - source: qb_serve
+    #    target: /config/ts_serve.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=HostRegexp(`^qbittorrent${TRAEFIK_RULE_SUFFIX}"
@@ -980,8 +962,6 @@ services:
 
 
   syncthing-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:syncthing"
     <<: *ts-sidecar
     hostname: syncthing
     environment:
@@ -1023,8 +1003,6 @@ services:
           create_host_path: true
 
   jellyseerr-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:jellyseerr"
     <<: *ts-sidecar
     hostname: jellyseerr
     environment:
@@ -1062,8 +1040,6 @@ services:
         bind:
           create_host_path: true
   whoami-ts:
-    post_start:
-      - command: tailscale serve advertise "svc:whoami" 
     <<: *ts-sidecar
     environment:
       <<: *ts-env
