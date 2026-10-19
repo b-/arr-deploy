@@ -529,7 +529,9 @@ configs:
               }
           }
       }
-
+x-disable: &disable
+  deploy:
+    replicas: 0
 x-ts-sidecar: &ts-sidecar
   # volumes:
   #   - ts_state:/ts_state
