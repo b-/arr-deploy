@@ -564,8 +564,7 @@ networks:
     name: arr
 services:
   filebrowser-ts:
-    <<: *disable
-    <<: *ts-sidecar
+    <<: [ *ts-sidecar, *disable ]
     environment:
       <<: *ts-env
       TS_HOSTNAME: "filebrowser-arr"
