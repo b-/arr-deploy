@@ -563,41 +563,40 @@ networks:
   default:
     name: arr
 services:
-  filebrowser-ts:
-    <<: [ *ts-sidecar, *disable ]
-    environment:
-      <<: *ts-env
-      TS_HOSTNAME: "filebrowser-arr"
-      TS_SERVE_CONFIG: /config/ts_serve.json
-    configs:
-      - source: filebrowser_serve
-        target: /config/ts_serve.json
-    extra_hosts:
-      - host.docker.internal=host-gateway
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
-      - traefik.http.services.filebrowser.loadbalancer.server.port=80
-      - "kop.filebrowser.bind.ip=filebrowser-arr.shark-perch.ts.net"
+  #filebrowser-ts:
+  #  <<: [ *ts-sidecar, *disable ]
+  #  environment:
+  #    <<: *ts-env
+  #    TS_HOSTNAME: "filebrowser-arr"
+  #    TS_SERVE_CONFIG: /config/ts_serve.json
+  #  configs:
+  #    - source: filebrowser_serve
+  #      target: /config/ts_serve.json
+  #  extra_hosts:
+  #   - host.docker.internal=host-gateway
+  #  labels:
+  #    - traefik.enable=true
+  #    - "traefik.http.routers.filebrowser.rule=HostRegexp(`^filebrowser${TRAEFIK_RULE_SUFFIX}"
+  #    - traefik.http.services.filebrowser.loadbalancer.server.port=80
+  #    - "kop.filebrowser.bind.ip=filebrowser-arr.shark-perch.ts.net"
 #    ports:
 #      - 80:80
 # filebrowser
-  filebrowser:
-    <<: *disable
-    configs:
-      - filebrowser.yml
-    #ports: !reset [null]
-    ports: !reset null
-    user: !reset [null]
-    network_mode: service:filebrowser-ts
-    command: [ "-c", "/filebrowser.yml"]
-    volumes: !override
-      - type: bind
-        source: /var/srv
-        target: /var/srv
-        bind:
-          create_host_path: false
-      #- type: bind
+  filebrowser: !reset
+    #<<: *disable
+    #configs:
+    #  - filebrowser.yml
+    #ports: !reset null
+    #user: !reset [null]
+    #network_mode: service:filebrowser-ts
+    #command: [ "-c", "/filebrowser.yml"]
+    #volumes: !override
+    #  - type: bind
+    #    source: /var/srv
+    #    target: /var/srv
+    #    bind:
+    #      create_host_path: false
+    ##  #- type: bind
       #  source: /var/srv/filebrowser/filebrowser.db
       #  target: /database.db
       #  bind:
