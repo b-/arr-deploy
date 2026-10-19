@@ -30,7 +30,7 @@ wait_for_healthy() {
 }
 
 declare -A svcs=(
-        [filebrowser-ts]=svc:arr-filebrowser
+        #[filebrowser-ts]=svc:arr-filebrowser
         [jellyfin-ts]=svc:jellyfin
 		[plex-ts]=svc:plex
 		[prowlarr-ts]=svc:prowlarr
