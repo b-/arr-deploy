@@ -17,7 +17,9 @@ links = [
   "https://sonarr.mediaboxlite.ibeep.com",
   "https://qbittorrent.mediaboxlite.ibeep.com"
 ]
+run_build = true
 poll_for_updates = true
+auto_update = true
 auto_update_all_services = true
 destroy_before_deploy = true
 linked_repo = "arr"
@@ -31,6 +33,7 @@ post_deploy.command = """
 """
 post_deploy.shell_mode = true
 extra_args = ["--remove-orphans"]
+ignore_services = ["filebrowser-ts", "filebrowser"]
 environment = """
 TRAEFIK_DOCKER_NETWORK=traefik
 TZ=America/New_York
