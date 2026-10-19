@@ -562,6 +562,7 @@ networks:
     name: arr
 services:
   filebrowser-ts:
+    <<: *disable
     <<: *ts-sidecar
     environment:
       <<: *ts-env
@@ -581,6 +582,7 @@ services:
 #      - 80:80
 # filebrowser
   filebrowser:
+    <<: *disable
     configs:
       - filebrowser.yml
     #ports: !reset [null]
