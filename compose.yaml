@@ -110,19 +110,59 @@ services:
 
 # qbittorrent
   qbittorrent:
-      image: ghcr.io/lantean-code/qbtmud:3.1.0-qbt5.2.4-lt2.0.15-ls481-r1
+      image: lscr.io/linuxserver/qbittorrent:5.2.4_v2.0.15-ls481
       container_name: qbittorrent
       environment:
         - PUID=1000
         - PGID=1000
         - TZ=America/New_York
-        - WEBUI_PORT=8112
+        - WEBUI_PORT=8113
         - TORRENTING_PORT=51412
       volumes:
         - /var/srv/apps/qbittorrent/appdata:/config
         - /var/srv/media/downloads:/downloads #optional
       network_mode: host
       restart: unless-stopped
+  vuetorrent-backend:
+    # build: .
+    image: ghcr.io/vuetorrent/vuetorrent-backend:latest
+    container_name: vuetorrent-backend
+    restart: unless-stopped
+    environment:
+      # Backend port needs to match qbit one to avoid "Host header validation" issues
+      - PORT=8112
+      - QBIT_BASE=http://qbittorrent:8113
+      # Use "dev" for nightly releases
+      - RELEASE_TYPE=stable
+      # Optional, refer to the node-schedule package for compatible syntax
+      - UPDATE_VT_CRON=0 * * * *
+
+      # Define this if using self-signed certificates on qBittorrent
+      # - NODE_EXTRA_CA_CERTS=/config/ssl/cert.pem
+      # You can also disable SSL verification (not recommended)
+      # - USE_INSECURE_SSL=true
+
+      # Only enable if backend container is behind a proxy server which already add x-forward headers
+      # - SKIP_X_FORWARD_HEADERS=true
+      # Create a Github PAT with your account to increase API rate limit
+      # fine-grained token with public repo access is enough
+      # https://github.com/settings/personal-access-tokens/new
+      # - GITHUB_AUTH=${GITHUB_AUTH}
+
+      # Log all received requests
+      # - LOG_REQUESTS=true
+
+      # If you want HTTPS, define the following variables with respective paths
+      # - SSL_CERT_PATH=/config/ssl/cert.pem
+      # - SSL_KEY_PATH=/config/ssl/key.pem
+      # Use these instead for passing the value directly
+      # - SSL_CERT=*****
+      # - SSL_KEY=*****
+    ports:
+      - "8112:8112"
+    volumes:
+      - "/var/srv/apps/qbittorrent/VueTorrent/appdata:/config"
+
 
 # tautulli
   tautulli:
