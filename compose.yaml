@@ -110,7 +110,7 @@ services:
 
 # qbittorrent
   qbittorrent:
-      image: ghcr.io/lantean-code/qbtmud:latest
+      image: ghcr.io/lantean-code/qbtmud:3.1.0-qbt5.2.4-lt2.0.15-ls481-r1
       container_name: qbittorrent
       environment:
         - PUID=1000
