@@ -128,10 +128,12 @@ services:
     image: ghcr.io/vuetorrent/vuetorrent-backend:latest
     container_name: vuetorrent-backend
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       # Backend port needs to match qbit one to avoid "Host header validation" issues
       - PORT=8112
-      - QBIT_BASE=http://qbittorrent:8113
+      - QBIT_BASE=http://host.docker.internal:8113
       # Use "dev" for nightly releases
       - RELEASE_TYPE=stable
       # Optional, refer to the node-schedule package for compatible syntax
