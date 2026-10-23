@@ -922,7 +922,7 @@ services:
       network_mode: host # service:qbittorrent-ts
       environment:
         - TZ=America/New_York
-        - WEBUI_PORT=8112
+        - WEBUI_PORT=8113
         - TORRENTING_PORT=51412
         #- DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
       volumes: !override
